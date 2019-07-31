@@ -23,7 +23,7 @@ var MainScene = new Phaser.Class({
             skill: skill,
             hitpoint: hitpoint,
             token: localStorage.getItem('jwt')
-        })
+        }, "POST")
         .done(async (e) => {
             this.sys.DialogModalPlugin.setText('Badass! Your new Ark has been delivered to the Hangar. ', true);
             await sleep(2000);

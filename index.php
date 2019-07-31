@@ -51,15 +51,25 @@
 		next = true
 	});
 
-	function request(endpoint, data) {
-		data = JSON.stringify(data);
-		return $.ajax({
-			url: 'http://localhost:8000' + endpoint,
-			dataType: 'json',
-			type: "POST",
-			data: data,
-			beforeSend: function() {}
-		})
+	function request(endpoint, data, method) {
+		if (method == "POST") {
+			data = JSON.stringify(data);
+			return $.ajax({
+				url: 'http://localhost:8000' + endpoint,
+				dataType: 'json',
+				type: method,
+				data: data,
+				beforeSend: function() {}
+			})
+		}
+		else {
+			return $.ajax({
+				url: 'http://localhost:8000' + endpoint,
+				type: method,
+				data: data,
+				beforeSend: function() {}
+			})
+		}
 	}
 
 	function sleep(ms) {
@@ -98,7 +108,7 @@
 		request('/user/login', {
 				username: uname,
 				password: passwd
-			})
+			}, "POST")
 			.done(async (e) => {
 				localStorage.setItem('jwt', e['jwt']);
 				dialogModal.setText('Success! Welcome back. ', true);
@@ -126,7 +136,7 @@
 				username: uname,
 				email: email,
 				password: passwd
-			})
+			}, "POST")
 			.done((e) => {
 				dialogModal.setText('All clear. Welcome aboard, Cap. ', true);
 			})

@@ -32,22 +32,71 @@ var HangarScene = new Phaser.Class({
             this.sys.DialogModalPlugin.setText('Error. Message: ' + e.responseText, true);
         });
     },
-    accessHangar: function () {
-
-    },
     preload: function () {
-		this.load.scenePlugin('DialogModalPlugin', 'dialog_plugin.js');
+        this.load.scenePlugin('DialogModalPlugin', 'dialog_plugin.js');
     },
     create: function () {
         // create your world here
         // this.add.image(400, 300, 'bg');
         this.add.bitmapText(160, 100, 'main_font', 'The Hangar', 28);
 
-        this.add.text(160, 135, 'Total Ark(s): 10', {
-            fill: '#fff',
-            fontWeight: 'bold',
-            fontSize: '15px'
-        });
+        request('/arks', { token: localStorage.getItem('jwt') }, "GET")
+            .done(async (e) => {
+                console.log(JSON.parse(e));
+                var span = 0;
+                var arks = JSON.parse(e)['data'];
+
+                this.add.text(160, 135, 'Total Ark(s): ' + arks.length, {
+                    fill: '#fff',
+                    fontWeight: 'bold',
+                    fontSize: '15px'
+                });
+
+                arks.forEach(ark => {
+                    console.log(ark);
+                    let arkButton = this.add.text(160, 200 + span, ark['ark_name'], {
+                        fill: '#0f0',
+                    })
+                    arkButton.setInteractive()
+                        .on('pointerdown', () => {
+                        })
+                        .on('pointerover', () => {
+                            arkButton.setStyle({
+                                fill: '#ff0'
+                            });
+                        })
+                        .on('pointerout', () => {
+                            arkButton.setStyle({
+                                fill: '#0f0'
+                            });
+                        });
+                    span += 20;
+                });
+            })
+            .fail((e) => {
+                this.sys.DialogModalPlugin.setText('Error. Message: ' + e.responseText, true);
+            });
+
+            let backButton = this.add.text(160, 350, 'Back', {
+                fill: '#0f0',
+            })
+            backButton.setInteractive()
+            .on('pointerdown', () => {
+            })
+            .on('pointerover', () => {
+                backButton.setStyle({
+                    fill: '#ff0'
+                });
+            })
+            .on('pointerout', () => {
+                backButton.setStyle({
+                    fill: '#0f0'
+                });
+            });
+
+            this.sys.DialogModalPlugin.init();
+            this.sys.DialogModalPlugin.setText('Welcome to The Hangar! The Hangar is a place to store all of your Ark machines; and even more, to upgrade them into maximum brutality. Please remember, every Ark can only be upgraded once.', true);
+
 
         // const createArkButton = this.add.text(160, 200, '[ Build New ARK ]', {
         //     fill: '#0f0',
