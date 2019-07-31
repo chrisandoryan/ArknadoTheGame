@@ -1,0 +1,12 @@
+input[type=text] {
+    /* width: 35%; */
+    width: 660px;
+}
+
+input[type=submit] {
+    width: 120px;
+}
+
+input {
+    margin: 1px;
+}
