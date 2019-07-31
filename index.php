@@ -5,30 +5,27 @@
 	<title>ArknadO - The Game</title>
 	<script src="//cdn.jsdelivr.net/npm/phaser@3.18.1/dist/phaser.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+	<link href="https://fonts.googleapis.com/css?family=Maven+Pro|Yrsa|Press+Start+2P" rel="stylesheet">
 	<link rel="stylesheet" href="assets/css/style.css">
 	<script src="MainScene.js"></script>
 	<script src="HangarScene.js"></script>
-</head>
-<style media='screen' type='text/css'>
-	@font-face {
-		font-family: main_font;
-		src: url('assets/font/font.ttf');
-		font-weight: 400;
-		font-weight: bold;
-	}
-</style>
+</head>	
 
 <body>
-	<div id="game"></div>
+	<div id="container">
+		<div id="game"></div>
+		<div id="stats"></div>
+	</div>
 	<form id="keyboard">
-		<input type="text" name="uinput" id="uinput">
-		<input type="submit" value="Send">
+		<input class="eightbit" type="text" name="uinput" id="uinput">
+		<input class="eightbit" type="submit" value="Send">
 	</form>
 </body>
 <script>
 	var config = {
 		type: Phaser.AUTO,
 		parent: 'game',
+		zoom: 1.2,
 		width: 800,
 		height: 600,
 		scene: {
@@ -37,6 +34,18 @@
 			update: update
 		}
 	};
+
+	function reqUpgrade(id) {
+		request(`/ark/upgrade/${id}`, {token: localStorage.getItem('jwt')}, "GET")
+			.done(async (e) => {
+				e = JSON.parse(e);
+				document.getElementById('upgrstat').innerHTML = `Attack +${e['result']['up_attack']} Hitpoint +${e['result']['up_hitpoint']}`;
+			})
+			.fail((e) => {
+				console.log(e);
+				document.getElementById('upgrstat').innerHTML = "Err. Message: " + e.responseText;
+			});
+	}
 
 	// this is an async timeout util (very useful indeed)
 	const timeout = async ms => new Promise(res => setTimeout(res, ms));
@@ -98,6 +107,7 @@
 	}
 
 	async function login(dialogModal, t) {
+		next = false;
 		dialogModal.init();
 		dialogModal.setText('What\'s your name? ', true);
 		let uname = await waitInput();
@@ -123,6 +133,7 @@
 	}
 
 	async function register(dialogModal, t) {
+		next = false;
 		dialogModal.init();
 		dialogModal.setText('New guy! How may I call you? ', true);
 		let uname = await waitInput();
@@ -143,6 +154,19 @@
 			.fail((e) => {
 				dialogModal.setText('Error. Message: ' + e.responseText, true);
 			});
+	}
+
+	function checkToken() {
+		let token = localStorage.getItem('jwt');
+		if (token !== null) {
+			request('/user/check', { token: token }, "POST")
+				.done((e) => {
+					dialogModal.setText('All clear. Welcome aboard, Cap. ', true);
+				})
+				.fail((e) => {
+					dialogModal.setText('Error. Message: ' + e.responseText, true);
+				});
+		}
 	}
 
 	function create() {
@@ -220,9 +244,8 @@
 		// });
 	}
 
-	function update() {
-
-	}
+	function update() { }
+	
 </script>
 
 </html>

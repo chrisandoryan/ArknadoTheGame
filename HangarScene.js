@@ -4,36 +4,55 @@ var HangarScene = new Phaser.Class({
         function HangarScene () {
             Phaser.Scene.call(this, { key: 'HangarScene' });
         },
-    createArk: async function () {
-        this.sys.DialogModalPlugin.init();
-        this.sys.DialogModalPlugin.setText('Great, let\'s create new Ark for you. Any cool name? ', true);
-        let arkname = await waitInput();
-        this.sys.DialogModalPlugin.setText(arkname + '? Cool enough. Now tell me its Attack Point (AP).', true);
-        let attackpoint = await waitInput();
-        this.sys.DialogModalPlugin.setText('What about its Hitpoint (HP)?', true);
-        let hitpoint = await waitInput();
-        this.sys.DialogModalPlugin.setText('Amazing. Last, any special skill? ', true);
-        let skill = await waitInput();
-        this.sys.DialogModalPlugin.setText('Done. Uploading Ark data to the server.. Please wait.', true);
-        await sleep(3000);
-        
-        request('/ark/create', {
-            ark_name: arkname,
-            attack: attackpoint,
-            skill: skill,
-            hitpoint: hitpoint,
-            token: localStorage.getItem('jwt')
-        })
-        .done(async (e) => {
-            this.sys.DialogModalPlugin.setText('Badass! Your new Ark has been delivered to the Hangar. ', true);
-            await sleep(2000);
-        })
-        .fail((e) => {
-            this.sys.DialogModalPlugin.setText('Error. Message: ' + e.responseText, true);
-        });
-    },
     preload: function () {
         this.load.scenePlugin('DialogModalPlugin', 'dialog_plugin.js');
+    },
+    displayArkDetail: function (data) {
+        console.log(data);
+        let stats = `
+            <table frame="box" style="background-color: white;" class="eightbit-card" id="tblstats">
+				<thead style="background-color: red">
+					<th><h2>${data.ark_name}</h2></th>
+				</thead>
+				<tbody>
+					<tr><td><img src="https://vignette.wikia.nocookie.net/duelmasters/images/e/e6/Bolshack_Dragon_artwork.jpg/revision/latest?cb=20111024181931" alt="" srcset="" style="width:420px;height:420px;"></td></tr>
+					<tr><td>
+						<center>
+							<b>Attack</b>
+							<br>
+                            ${data.attack}
+							<br>                            
+						</center>
+					</td></tr>
+					<tr><td>
+						<center>
+							<b>Hitpoint</b>
+							<br>
+                            ${data.hitpoint}
+							<br>                            
+						</center>
+					</td></tr>
+					<tr><td>
+						<center>
+							<b>Skill</b>
+							<br>
+                            ${data.skill}
+							<br>                            
+						</center>
+                    </td></tr>
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                    <tr><td></td></tr>
+                    <tr><td style="border:1pt solid black;">
+						<center>
+							<button onclick="return reqUpgrade(${data.id})" id="btnupgrade" class="eightbit">Upgrade</button>
+						</center>
+                    </td></tr>
+                    <tr><td><center><span id="upgrstat"></span></center></td></tr>
+				</tbody>
+            </table>
+        `
+        document.getElementById('stats').innerHTML = stats;
     },
     create: function () {
         // create your world here
@@ -59,6 +78,7 @@ var HangarScene = new Phaser.Class({
                     })
                     arkButton.setInteractive()
                         .on('pointerdown', () => {
+                            this.displayArkDetail(ark);
                         })
                         .on('pointerover', () => {
                             arkButton.setStyle({
@@ -82,6 +102,8 @@ var HangarScene = new Phaser.Class({
             })
             backButton.setInteractive()
             .on('pointerdown', () => {
+                game.scene.stop(this);
+				game.scene.start('MainScene');
             })
             .on('pointerover', () => {
                 backButton.setStyle({
