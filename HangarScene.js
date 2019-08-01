@@ -9,13 +9,18 @@ var HangarScene = new Phaser.Class({
     },
     displayArkDetail: function (data) {
         console.log(data);
+        let banner_loc = data.banner_name !== null ? `http://localhost:8000/public/images/${data.banner_name}` : "https://vignette.wikia.nocookie.net/duelmasters/images/e/e6/Bolshack_Dragon_artwork.jpg/revision/latest?cb=20111024181931"
         let stats = `
             <table frame="box" style="background-color: white;" class="eightbit-card" id="tblstats">
 				<thead style="background-color: red">
 					<th><h2>${data.ark_name}</h2></th>
 				</thead>
 				<tbody>
-					<tr><td><img src="https://vignette.wikia.nocookie.net/duelmasters/images/e/e6/Bolshack_Dragon_artwork.jpg/revision/latest?cb=20111024181931" alt="" srcset="" style="width:420px;height:420px;"></td></tr>
+                    <tr><td><img src="${banner_loc}" alt="" srcset="" style="width:420px;height:420px;">
+                    <form id="uploadbanner" enctype="multipart/form-data">
+                        <button onclick="return trigUploadBanner(event)" id="upbannerbtn" class="uploadbtn eightbit"><i class="fas fa-upload"></i></button>
+                        <input type="file" name="arkbanner" id="getbannerloc" accept="image/*" onchange="return uploadBanner(event, ${data.id})">
+                    </form></td></tr>
 					<tr><td>
 						<center>
 							<b>Attack</b>

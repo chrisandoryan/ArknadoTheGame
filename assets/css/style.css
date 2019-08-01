@@ -21,7 +21,13 @@ input[type=text] {
     /* height: 46px; */
 }
 
-input[type=submit], button {
+input[type=file] {
+    -webkit-appearance: none;
+    outline: none;
+    display: none;
+}
+
+input[type=submit], button, input[type=file] {
     width: 160px;
     color: white;
     /* height: 58px; */
@@ -52,6 +58,16 @@ input {
 
 #upgrstat {
     color: red;
+}
+
+.uploadbtn {
+    position: absolute !important;
+    left: 8%;
+    top: 14%;
+    width: 45px;
+    height: 40px;
+    padding: 0px !important;
+    padding-bottom: 25px !important;
 }
 
 /* 3rd party styling https://codepen.io/MatthewShields/pen/pwrXpV */

@@ -7,6 +7,7 @@
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 	<link href="https://fonts.googleapis.com/css?family=Maven+Pro|Yrsa|Press+Start+2P" rel="stylesheet">
 	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="stylesheet" href="assets/css/fa-all.min.css">
 	<script src="MainScene.js"></script>
 	<script src="HangarScene.js"></script>
 </head>	
@@ -47,6 +48,23 @@
 			});
 	}
 
+	function trigUploadBanner(event) {
+		event.preventDefault();
+		document.getElementById('getbannerloc').click();
+	}
+
+	function uploadBanner(event, id) {
+		event.preventDefault();
+		var fd = new FormData(document.getElementById('uploadbanner'));
+		request(`/ark/${id}/uploadBanner`, fd, "PUT")
+			.done(async (e) => {
+				e = JSON.parse(e);
+			})
+			.fail((e) => {
+				console.log(e);
+			});
+	}
+
 	// this is an async timeout util (very useful indeed)
 	const timeout = async ms => new Promise(res => setTimeout(res, ms));
 	let next = false; // this is to be changed on user input
@@ -71,11 +89,21 @@
 				beforeSend: function() {}
 			})
 		}
-		else {
+		else if (method == "GET") {
 			return $.ajax({
 				url: 'http://localhost:8000' + endpoint,
 				type: method,
 				data: data,
+				beforeSend: function() {}
+			})
+		}
+		else if (method == "PUT") {
+			return $.ajax({
+				url: 'http://localhost:8000' + endpoint,
+				type: "POST",
+				data: data,
+				processData: false,
+    			contentType: false,
 				beforeSend: function() {}
 			})
 		}

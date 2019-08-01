@@ -25,7 +25,7 @@ var MainScene = new Phaser.Class({
             token: localStorage.getItem('jwt')
         }, "POST")
         .done(async (e) => {
-            this.sys.DialogModalPlugin.setText('Badass! Your new Ark has been delivered to the Hangar. ', true);
+            this.sys.DialogModalPlugin.setText('Badass! Your new Ark has been delivered to The Hangar. ', true);
             await sleep(2000);
         })
         .fail((e) => {
