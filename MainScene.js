@@ -119,6 +119,7 @@ var MainScene = new Phaser.Class({
         logoutButton.setInteractive()
             .on('pointerdown', () => {
                 game.scene.stop(this);
+                game.scene.start('ExitScene');
             })
             .on('pointerover', () => {
                 logoutButton.setStyle({

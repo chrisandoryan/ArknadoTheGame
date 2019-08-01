@@ -107,6 +107,8 @@ var HangarScene = new Phaser.Class({
             })
             backButton.setInteractive()
             .on('pointerdown', () => {
+                document.getElementById('stats').innerHTML = "";
+
                 game.scene.stop(this);
 				game.scene.start('MainScene');
             })

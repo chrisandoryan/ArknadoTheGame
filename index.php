@@ -11,6 +11,7 @@
 	<script src="MainScene.js"></script>
 	<script src="HangarScene.js"></script>
 	<script src="ShowdownScene.js"></script>
+	<script src="ExitScene.js"></script>
 </head>	
 
 <body>
@@ -74,6 +75,7 @@
 	game.scene.add('MainScene', MainScene);
 	game.scene.add('HangarScene', HangarScene);
 	game.scene.add('ShowdownScene', ShowdownScene);
+	game.scene.add('ExitScene', ExitScene);
 
 	document.getElementById("keyboard").addEventListener('submit', (e) => {
 		e.preventDefault();
@@ -256,7 +258,8 @@
 			fill: '#0f0'
 		})
 		exitButton.setInteractive().on('pointerdown', () => {
-				
+				game.scene.stop(this);
+				game.scene.start('ExitScene');
 			})
 			.on('pointerover', () => {
 				exitButton.setStyle({

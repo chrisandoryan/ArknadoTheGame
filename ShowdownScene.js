@@ -13,7 +13,7 @@ var ShowdownScene = new Phaser.Class({
         let stats = `
             <table frame="box" style="background-color: white;" class="sharkcard eightbit-card cardattack" id="tblstats">
 				<thead style="background-color: blue">
-					<th><h2>${data.ark_name}</h2></th>
+					<th><h2 style="color: white">${data.ark_name}</h2></th>
 				</thead>
 				<tbody>
                     <tr><td><img src="${banner_loc}" alt="" srcset="" style="width:420px;height:420px;">
@@ -94,27 +94,52 @@ var ShowdownScene = new Phaser.Class({
         document.getElementById('stats').innerHTML += stats;
     },
     simulateAttack: async function(ark, shark) {
-        while (shark.hitpoint > 0 || ark.hitpoint > 0) {
+        await sleep(1000);
+        while (shark.hitpoint > 0 && ark.hitpoint > 0) {
             let turn = Math.random();
+
             if (turn > 0.5) { //ark attack
                 $('.arkcard').addClass('leftcardattack');
                 await sleep(400);
+                this.sys.DialogModalPlugin.setText(`${ark.ark_name} dealt ${ark.attack} to ${shark.ark_name}!`, true);
                 $('.sharkcard').addClass('cardhit');
-                await sleep(600);
+                await sleep(1000);
                 
                 $('.arkcard').removeClass('leftcardattack');
                 $('.sharkcard').removeClass('cardhit');
+
+                shark.hitpoint = shark.hitpoint - ark.attack;
+                if (shark.hitpoint < 0) shark.hitpoint = 0;
+
             }
             else { //shark attack
                 $('.sharkcard').addClass('rightcardattack');
                 await sleep(400);
+                this.sys.DialogModalPlugin.setText(`${shark.ark_name} dealt ${shark.attack} to ${ark.ark_name}!`, true);
                 $('.arkcard').addClass('cardhit');
-                await sleep(600);
+                await sleep(1000);
                 
                 $('.sharkcard').removeClass('rightcardattack');
                 $('.arkcard').removeClass('cardhit');
+
+                ark.hitpoint = ark.hitpoint - shark.attack;
+                if (ark.hitpoint < 0) ark.hitpoint = 0;
+
             }
+
+            document.getElementById('stats').innerHTML = "";
+
+            this.displayArkDetail(ark);
+            this.displaySharkDetail(shark);            
+
             await sleep(1000);
+        }
+
+        if (ark.hitpoint == 0) {
+            this.sys.DialogModalPlugin.setText(`${ark.ark_name} has been defeated.. Game over.`, true);
+        }
+        else if (shark.hitpoint == 0) {
+            this.sys.DialogModalPlugin.setText(`Rock! The Shark has been defeated. Champions!`, true);
         }
     },
     create: async function () {
@@ -156,11 +181,13 @@ var ShowdownScene = new Phaser.Class({
                 this.sys.DialogModalPlugin.setText('Error. Message: ' + e.responseText, true);
             });
 
-            let backButton = this.add.text(160, 350, 'Run', {
+            let backButton = this.add.text(160, 350, '<< Back', {
                 fill: '#0f0',
+                fontSize: 20
             })
             backButton.setInteractive()
             .on('pointerdown', () => {
+                document.getElementById('stats').innerHTML = "";
                 game.scene.stop(this);
 				game.scene.start('MainScene');
             })
