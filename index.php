@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="assets/css/fa-all.min.css">
 	<script src="MainScene.js"></script>
 	<script src="HangarScene.js"></script>
+	<script src="ShowdownScene.js"></script>
 </head>	
 
 <body>
@@ -72,6 +73,7 @@
 	var game = new Phaser.Game(config);
 	game.scene.add('MainScene', MainScene);
 	game.scene.add('HangarScene', HangarScene);
+	game.scene.add('ShowdownScene', ShowdownScene);
 
 	document.getElementById("keyboard").addEventListener('submit', (e) => {
 		e.preventDefault();

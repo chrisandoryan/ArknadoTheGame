@@ -76,6 +76,8 @@ var MainScene = new Phaser.Class({
 
         battleButton.setInteractive()
             .on('pointerdown', () => {
+                game.scene.stop(this);
+				game.scene.start('ShowdownScene');
             })
             .on('pointerover', () => {
                 battleButton.setStyle({

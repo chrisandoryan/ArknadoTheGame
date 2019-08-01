@@ -45,11 +45,12 @@ input {
     float: right;
     display: flex;
     align-items: center;
-    width: 45%;
+    width: 48%;
 }
 
 #tblstats {
     font-size: 15px;
+    margin-right: 40px;
 }
 
 #btnupgrade {
@@ -161,4 +162,91 @@ input[type=text]:active {
 
 .eightbit--proceed:active {
     box-shadow: inset 4px 4px 0px 0px #E59400;
+}
+
+.rightcardattack {
+    transition:2s;
+    -webkit-transition:2s;
+    -moz-transition:2s;
+    animation: rightAttack .8s;
+}
+
+.leftcardattack {
+    transition:2s;
+    -webkit-transition:2s;
+    -moz-transition:2s;
+    animation: leftAttack .8s;
+}
+
+.cardhit {
+    animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-3px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(6px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-12px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(12px, 0, 0);
+    }
+}
+
+@keyframes rightAttack {
+    10%{
+        transform: translate3d(40px, 0, 0) ;
+        
+    }
+    15%{
+        transform: rotate(0);
+    }
+    50%{
+        transform: rotate(-20deg);
+    }
+    60%{
+        transform: translate3d(-150px, 0, 0);
+        
+    }
+    100%{
+        transform: translate3d(0px, 0, 0) rotate(0);
+
+    }
+}
+
+@keyframes leftAttack {
+    10%{
+        transform: translate3d(-40px, 0, 0);
+        
+    }
+    15%{
+        transform: rotate(0);
+    }
+    50%{
+        transform: rotate(20deg);
+    }
+    60%{
+        transform: translate3d(150px, 0, 0);
+
+    }
+    100%{
+        transform: translate3d(0px, 0, 0) rotate(0);
+
+    }
 }
